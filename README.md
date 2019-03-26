@@ -10,4 +10,5 @@
 ## How to install
     npm install gendiff-gapallex
 
-[![asciicast](https://asciinema.org/a/UXCsKTlNw1x7nYpnQa127Lm24.svg)](https://asciinema.org/a/UXCsKTlNw1x7nYpnQa127Lm24)
+<!-- [![asciicast](https://asciinema.org/a/UXCsKTlNw1x7nYpnQa127Lm24.svg)](https://asciinema.org/a/UXCsKTlNw1x7nYpnQa127Lm24) -->
+[![asciicast](https://asciinema.org/a/hZlc9WDqp3NHd12bohQnSyGty.svg)](https://asciinema.org/a/hZlc9WDqp3NHd12bohQnSyGty)
