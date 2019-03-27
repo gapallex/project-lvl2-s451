@@ -15,3 +15,6 @@
 
 ### .yml
 [![asciicast](https://asciinema.org/a/0bTdINxvTk1JXrqn2Bq63KuzF.svg)](https://asciinema.org/a/0bTdINxvTk1JXrqn2Bq63KuzF)
+
+### .ini
+[![asciicast](https://asciinema.org/a/NChEZisrOxouocqKlv5jQPzZF.svg)](https://asciinema.org/a/NChEZisrOxouocqKlv5jQPzZF)

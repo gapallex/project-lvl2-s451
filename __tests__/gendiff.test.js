@@ -1,13 +1,33 @@
 
 import fs from 'fs';
-import gendiff from '../src';
+import genDiff from '../src';
 
-test('.json format', () => {
-  expect(gendiff('__tests__/__fixtures__/b.json', '__tests__/__fixtures__/a.json'))
-    .toBe(fs.readFileSync('__tests__/__fixtures__/result.txt', 'utf8'));
-});
+const files = {
+  json: {
+    before: '__tests__/__fixtures__/b.json',
+    after: '__tests__/__fixtures__/a.json',
+  },
 
-test('.yml fornat', () => {
-  expect(gendiff('__tests__/__fixtures__/b.yml', '__tests__/__fixtures__/a.yml'))
-    .toBe(fs.readFileSync('__tests__/__fixtures__/result.txt', 'utf8'));
-});
+  yml: {
+    before: '__tests__/__fixtures__/b.yml',
+    after: '__tests__/__fixtures__/a.yml',
+  },
+
+  ini: {
+    before: '__tests__/__fixtures__/b.ini',
+    after: '__tests__/__fixtures__/a.ini',
+  },
+
+  result: fs.readFileSync('__tests__/__fixtures__/result.txt', 'utf8'),
+};
+
+test.each([
+  [files.json.before, files.json.after, files.result],
+  [files.yml.before, files.yml.after, files.result],
+  [files.ini.before, files.ini.after, files.result],
+])(
+  '%s & %s',
+  (before, after, result) => {
+    expect(genDiff(before, after)).toBe(result);
+  },
+);
