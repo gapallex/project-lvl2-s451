@@ -1,6 +1,6 @@
 {
   "name": "gendiff-gapallex",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Compares two configuration files and shows a difference",
   "bin": {
     "gendiff": "dist/bin/gendiff.js"
@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "commander": "^2.19.0",
+    "js-yaml": "^3.13.0",
     "lodash": "^4.17.11"
   }
 }

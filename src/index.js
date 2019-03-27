@@ -1,9 +1,7 @@
-import fs from 'fs';
 import _ from 'lodash';
+import getObj from './parsers';
 
-const getObj = filePath => JSON.parse(fs.readFileSync(filePath, 'utf8'));
-
-const diff = (firstObj, secondObj) => {
+const genDiff = (firstObj, secondObj) => {
   const uniqKeys = _.union(_.keys(firstObj), _.keys(secondObj));
   const getNode = (label, key, obj) => `${label} ${key}: ${obj[key]}`;
   const setDiff = (acc, key) => {
@@ -26,7 +24,7 @@ const diff = (firstObj, secondObj) => {
   return `{\n${resultArray.join('\n')}\n}`;
 };
 
-export default (firstFilePath, secondFilePath) => diff(
+export default (firstFilePath, secondFilePath) => genDiff(
   getObj(firstFilePath),
   getObj(secondFilePath),
 );
