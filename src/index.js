@@ -4,22 +4,26 @@ import _ from 'lodash';
 const getObj = filePath => JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
 const diff = (firstObj, secondObj) => {
-  const uniqKeys = [...new Set(Object.keys(firstObj).concat(Object.keys(secondObj)))];
-  const findDiff = (acc, key) => {
+  const uniqKeys = _.union(_.keys(firstObj), _.keys(secondObj));
+  const getNode = (label, key, obj) => `${label} ${key}: ${obj[key]}`;
+  const setDiff = (acc, key) => {
     if (_.has(firstObj, key) && !_.has(secondObj, key)) {
-      return [...acc, `- ${key}: ${firstObj[key]}`];
+      return acc.concat(getNode('-', key, firstObj));
     }
 
     if (!_.has(firstObj, key) && _.has(secondObj, key)) {
-      return [...acc, `+ ${key}: ${secondObj[key]}`];
+      return acc.concat(getNode('+', key, secondObj));
     }
 
     if (firstObj[key] === secondObj[key]) {
-      return [...acc, `  ${key}: ${firstObj[key]}`];
+      return acc.concat(getNode(' ', key, firstObj));
     }
-    return [...acc, `- ${key}: ${firstObj[key]}`, `+ ${key}: ${secondObj[key]}`];
+
+    return acc.concat(getNode('-', key, firstObj), getNode('+', key, secondObj));
   };
-  return `{\n${uniqKeys.reduce(findDiff, []).join('\n')}\n}`;
+
+  const resultArray = uniqKeys.reduce(setDiff, []);
+  return `{\n${resultArray.join('\n')}\n}`;
 };
 
 export default (firstFilePath, secondFilePath) => diff(
