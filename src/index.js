@@ -1,5 +1,14 @@
 import _ from 'lodash';
-import getObj from './parsers';
+import fs from 'fs';
+import path from 'path';
+import getParse from './parsers';
+
+const getData = (filePath) => {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const fileExtName = path.extname(filePath);
+  const parse = getParse(fileExtName);
+  return parse(content);
+};
 
 const genDiff = (firstObj, secondObj) => {
   const uniqKeys = _.union(_.keys(firstObj), _.keys(secondObj));
@@ -25,6 +34,6 @@ const genDiff = (firstObj, secondObj) => {
 };
 
 export default (firstFilePath, secondFilePath) => genDiff(
-  getObj(firstFilePath),
-  getObj(secondFilePath),
+  getData(firstFilePath),
+  getData(secondFilePath),
 );
