@@ -23,8 +23,8 @@ const files = {
 
 test.each([
   [files.json.before, files.json.after, files.result],
-  [files.yml.before, files.yml.after, files.result],
-  [files.ini.before, files.ini.after, files.result],
+  // [files.yml.before, files.yml.after, files.result],
+  // [files.ini.before, files.ini.after, files.result],
 ])(
   '%s & %s',
   (before, after, result) => {
