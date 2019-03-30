@@ -27,7 +27,7 @@ const buildAst = (obj1, obj2) => {
       return acc.concat(getNode('unchanged', key, { value: obj1[key] }));
     }
 
-    if (_.isPlainObject(obj1[key]) && _.isPlainObject(obj2[key])) {
+    if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
       return acc.concat(
         getNode('hasChildren', key, { children: buildAst(obj1[key], obj2[key]) }),
       );

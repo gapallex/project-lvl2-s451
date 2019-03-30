@@ -1,32 +1,56 @@
 import _ from 'lodash';
 
-const stringify = (value) => {
-  if (_.isPlainObject(value)) {
+const margin = (deepth, extraSpace) => ' '.repeat(0 + deepth + extraSpace);
+
+const stringify = (deepth, value) => {
+  if (_.isObject(value)) {
     const values = _.keys(value)
-      .map(key => `${key}: ${stringify(value[key])}`)
+      .map(key => `${margin(deepth, 6)}  ${key}: ${stringify(deepth + 4, value[key])}`)
       .join('\n');
-    return `{\n${values}\n}`;
+    return `{\n${values}\n${margin(deepth, 4)}}`;
   }
   return value;
 };
 
 const renderAst = (ast) => {
-  const nodesRenderers = {
-    deleted: node => `- ${node.key}: ${stringify(node.value)}`,
-    unchanged: node => `  ${node.key}: ${stringify(node.value)}`,
-    added: node => `+ ${node.key}: ${stringify(node.value)}`,
-    changed: node => [
-      `- ${node.key}: ${stringify(node.beforeValue)}`,
-      `+ ${node.key}: ${stringify(node.afterValue)}`,
-    ],
-    hasChildren: node => `  ${node.key}: ${renderAst(node.children)}`,
-  };
+  const iter = (deepth, tree) => {
+    const nodesRenderers = {
 
-  const renderNode = (acc, node) => {
-    const render = nodesRenderers[node.type];
-    return acc.concat(render(node));
+      deleted: node => `${margin(deepth, 2)}- ${node.key}: ${stringify(
+        deepth,
+        node.value,
+      )}`,
+
+      unchanged: node => `${margin(deepth, 2)}  ${node.key}: ${stringify(
+        deepth,
+        node.value,
+      )}`,
+
+      added: node => `${margin(deepth, 2)}+ ${node.key}: ${stringify(
+        deepth,
+        node.value,
+      )}`,
+
+      changed: node => [
+        `${margin(deepth, 2)}- ${node.key}: ${stringify(deepth, node.beforeValue)}`,
+        `${margin(deepth, 2)}+ ${node.key}: ${stringify(deepth, node.afterValue)}`,
+      ],
+
+      hasChildren: node => `${margin(deepth, 2)}  ${node.key}: ${iter(
+        deepth + 4,
+        node.children,
+      )}`,
+
+    };
+
+    const renderNode = (acc, node) => {
+      const render = nodesRenderers[node.type];
+      return acc.concat(render(node));
+    };
+    return `{\n${tree.reduce(renderNode, [])
+      .join('\n')}\n${margin(deepth, 0)}}`;
   };
-  return `{\n${ast.reduce(renderNode, []).join('\n')}\n}`;
+  return iter(0, ast);
 };
 
 export default renderAst;

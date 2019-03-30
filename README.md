@@ -18,3 +18,6 @@
 
 ### .ini
 [![asciicast](https://asciinema.org/a/NChEZisrOxouocqKlv5jQPzZF.svg)](https://asciinema.org/a/NChEZisrOxouocqKlv5jQPzZF)
+
+### treeLike
+[![asciicast](https://asciinema.org/a/UegBUJMCRAKgZZZSvLRnSIBCa.svg)](https://asciinema.org/a/UegBUJMCRAKgZZZSvLRnSIBCa)

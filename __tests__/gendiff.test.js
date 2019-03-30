@@ -18,16 +18,16 @@ const files = {
     after: '__tests__/__fixtures__/a.ini',
   },
 
-  result: fs.readFileSync('__tests__/__fixtures__/result.txt', 'utf8'),
+  result: '__tests__/__fixtures__/result.txt',
 };
 
 test.each([
-  [files.json.before, files.json.after, files.result],
-  // [files.yml.before, files.yml.after, files.result],
-  // [files.ini.before, files.ini.after, files.result],
+  [files.json.before, files.json.after],
+  [files.yml.before, files.yml.after],
+  [files.ini.before, files.ini.after],
 ])(
   '%s & %s',
-  (before, after, result) => {
-    expect(genDiff(before, after)).toBe(result);
+  (before, after) => {
+    expect(genDiff(before, after)).toBe(fs.readFileSync(files.result, 'utf8'));
   },
 );
