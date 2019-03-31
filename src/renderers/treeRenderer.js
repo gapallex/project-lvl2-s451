@@ -12,7 +12,7 @@ const stringify = (depth, value) => {
   return `{\n${values}\n${margin(depth + 1)}}`;
 };
 
-export default {
+const renderers = {
   deleted: (depth, node) => `${margin(depth)}  - ${node.key}: ${stringify(
     depth,
     node.value,
@@ -39,3 +39,13 @@ export default {
   )}\n${margin(depth + 1)}}`,
 
 };
+
+const renderAst = (depth, ast) => {
+  const renderNode = (acc, node) => {
+    const render = renderers[node.type];
+    return acc.concat(render(depth, node, renderAst));
+  };
+  return ast.reduce(renderNode, []).join('\n');
+};
+
+export default ast => `{\n${renderAst(0, ast)}\n}`;

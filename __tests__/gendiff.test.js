@@ -20,6 +20,7 @@ const files = {
   result: {
     tree: '__tests__/__fixtures__/treeResult.txt',
     plain: '__tests__/__fixtures__/plainResult.txt',
+    json: '__tests__/__fixtures__/jsonResult.txt',
   },
 };
 
@@ -32,5 +33,6 @@ test.each([
   (before, after) => {
     expect(genDiff(before, after, 'tree')).toBe(fs.readFileSync(files.result.tree, 'utf8'));
     expect(genDiff(before, after, 'plain')).toBe(fs.readFileSync(files.result.plain, 'utf8'));
+    expect(genDiff(before, after, 'json')).toBe(fs.readFileSync(files.result.json, 'utf8'));
   },
 );

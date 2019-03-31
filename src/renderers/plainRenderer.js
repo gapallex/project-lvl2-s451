@@ -10,27 +10,37 @@ const stringify = (value) => {
   return `{ ${values} }`;
 };
 
-const getRootPath = (deepth, lastKey) => deepth.concat(lastKey).join('.');
+const getRootPath = (level, lastKey) => level.concat(lastKey).join('.');
 
-export default {
-  deleted: (deepth, node) => `Property '${getRootPath(
-    deepth,
+const renderers = {
+  deleted: (level, node) => `Property '${getRootPath(
+    level,
     node.key,
   )}' was removed`,
 
-  added: (deepth, node) => `Property '${getRootPath(
-    deepth,
+  added: (level, node) => `Property '${getRootPath(
+    level,
     node.key,
   )}' was added with value: '${stringify(node.value)}'`,
 
   unchanged: () => [],
 
-  changed: (deepth, node) => `Property '${getRootPath(
-    deepth,
+  changed: (level, node) => `Property '${getRootPath(
+    level,
     node.key,
   )}' was updated. From '${stringify(node.beforeValue)}' to '${stringify(
     node.afterValue,
   )}'`,
 
-  hasChildren: (deepth, node, iter) => iter(deepth.concat(node.key), node.children),
+  hasChildren: (level, node, iter) => iter(level.concat(node.key), node.children),
 };
+
+const renderAst = (level, ast) => {
+  const renderNode = (acc, node) => {
+    const render = renderers[node.type];
+    return acc.concat(render(level, node, renderAst));
+  };
+  return ast.reduce(renderNode, []).join('\n');
+};
+
+export default ast => renderAst([], ast);
