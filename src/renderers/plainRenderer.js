@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
 const stringify = (value) => {
-  if (_.isObject(value)) {
-    const values = _.keys(value)
-      .map(key => `${key}: ${stringify(value[key])}`)
-      .join(', ');
-    return `{ ${values} }`;
+  if (!_.isObject(value)) {
+    return value;
   }
-  return value;
+  const values = _.keys(value)
+    .map(key => `${key}: ${stringify(value[key])}`)
+    .join(', ');
+  return `{ ${values} }`;
 };
 
 const getRootPath = (deepth, lastKey) => deepth.concat(lastKey).join('.');

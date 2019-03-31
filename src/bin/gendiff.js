@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 import program from 'commander';
 import genDiff from '..';
+import { version } from '../../package.json';
 
 program
+  .version(version)
   .arguments('<firstConfig> <secondConfig>')
   .description('Compares two configuration files and shows a difference.')
-  .option('-V, --version', 'output the version number')
-  .option('-f, --format [type]', 'Output format')
-  .action((firstConfig, secondConfig) => console.log(genDiff(firstConfig, secondConfig, 'list')))
+  .option('-f, --format [type]', 'Output format. Types: plain or', 'tree')
+  .action((firstConfig, secondConfig) => console.log(
+    genDiff(firstConfig, secondConfig, program.format),
+  ))
   .parse(process.argv);

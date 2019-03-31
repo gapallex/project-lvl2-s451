@@ -1,20 +1,20 @@
 import treeRenderer from './treeRenderer';
-import listRenderer from './listRenderer';
+import plainRenderer from './plainRenderer';
 
-const renderAst = (ast, liftValue, renderer) => {
-  const iter = (lift, tree) => {
+const renderAst = (ast, levelAccumulator, renderer) => {
+  const iter = (levelAcc, tree) => {
     const renderNode = (acc, node) => {
       const render = renderer[node.type];
-      return acc.concat(render(lift, node, iter));
+      return acc.concat(render(levelAcc, node, iter));
     };
     return tree.reduce(renderNode, []).join('\n');
   };
-  return iter(liftValue, ast);
+  return iter(levelAccumulator, ast);
 };
 
 const renderers = {
   tree: ast => `{\n${renderAst(ast, 0, treeRenderer)}\n}`,
-  list: ast => renderAst(ast, [], listRenderer),
+  plain: ast => renderAst(ast, [], plainRenderer),
 };
 
 export default (format, ast) => {

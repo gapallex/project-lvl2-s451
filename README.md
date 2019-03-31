@@ -21,3 +21,6 @@
 
 ### treeLike
 [![asciicast](https://asciinema.org/a/UegBUJMCRAKgZZZSvLRnSIBCa.svg)](https://asciinema.org/a/UegBUJMCRAKgZZZSvLRnSIBCa)
+
+### plainLike 
+[![asciicast](https://asciinema.org/a/5i6hgqTagOK4iKmdKURvWDFWw.svg)](https://asciinema.org/a/5i6hgqTagOK4iKmdKURvWDFWw)

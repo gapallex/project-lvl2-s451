@@ -1,6 +1,5 @@
-
 import fs from 'fs';
-import genDiff from '../src';
+import genDiff from '../src/index';
 
 const files = {
   json: {
@@ -18,7 +17,10 @@ const files = {
     after: '__tests__/__fixtures__/a.ini',
   },
 
-  result: '__tests__/__fixtures__/result.txt',
+  result: {
+    tree: '__tests__/__fixtures__/treeResult.txt',
+    plain: '__tests__/__fixtures__/plainResult.txt',
+  },
 };
 
 test.each([
@@ -28,6 +30,7 @@ test.each([
 ])(
   '%s & %s',
   (before, after) => {
-    expect(genDiff(before, after)).toBe(fs.readFileSync(files.result, 'utf8'));
+    expect(genDiff(before, after, 'tree')).toBe(fs.readFileSync(files.result.tree, 'utf8'));
+    expect(genDiff(before, after, 'plain')).toBe(fs.readFileSync(files.result.plain, 'utf8'));
   },
 );
