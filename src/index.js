@@ -1,8 +1,9 @@
-import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
 import getParse from './parsers';
-import render from './render';
+import render from './renderers';
+import buildAst from './buildAst';
+
 
 const getData = (filePath) => {
   const content = fs.readFileSync(filePath, 'utf8');
@@ -11,36 +12,8 @@ const getData = (filePath) => {
   return parse(content);
 };
 
-const buildAst = (obj1, obj2) => {
-  const uniqKeys = _.union(_.keys(obj1), _.keys(obj2));
-  const getNode = (type, key, rest) => ({ type, key, ...rest });
-  const setDiff = (acc, key) => {
-    if (_.has(obj1, key) && !_.has(obj2, key)) {
-      return acc.concat(getNode('deleted', key, { value: obj1[key] }));
-    }
-
-    if (!_.has(obj1, key) && _.has(obj2, key)) {
-      return acc.concat(getNode('added', key, { value: obj2[key] }));
-    }
-
-    if (obj1[key] === obj2[key]) {
-      return acc.concat(getNode('unchanged', key, { value: obj1[key] }));
-    }
-
-    if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
-      return acc.concat(
-        getNode('hasChildren', key, { children: buildAst(obj1[key], obj2[key]) }),
-      );
-    }
-    return acc.concat(
-      getNode('changed', key, { beforeValue: obj1[key], afterValue: obj2[key] }),
-    );
-  };
-
-  return uniqKeys.reduce(setDiff, []);
-};
-
-export default (firstFilePath, secondFilePath) => render(
+export default (firstFilePath, secondFilePath, format = 'tree') => render(
+  format,
   buildAst(
     getData(firstFilePath),
     getData(secondFilePath),
