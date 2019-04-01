@@ -1,33 +1,51 @@
 import _ from 'lodash';
 
-const getNode = (obj1, obj2, key, build) => {
-  if (_.has(obj1, key) && !_.has(obj2, key)) {
-    return { type: 'deleted', key, value: obj1[key] };
-  }
+const propertyActions = [
+  {
+    check: ({ obj1, obj2, key }) => _.has(obj1, key) && !_.has(obj2, key),
+    process: ({ obj1, key }) => ({ type: 'deleted', key, value: obj1[key] }),
+  },
 
-  if (!_.has(obj1, key) && _.has(obj2, key)) {
-    return { type: 'added', key, value: obj2[key] };
-  }
+  {
+    check: ({ obj1, obj2, key }) => !_.has(obj1, key) && _.has(obj2, key),
+    process: ({ obj2, key }) => ({ type: 'added', key, value: obj2[key] }),
+  },
 
-  if (obj1[key] === obj2[key]) {
-    return { type: 'unchanged', key, value: obj1[key] };
-  }
+  {
+    check: ({ obj1, obj2, key }) => obj1[key] === obj2[key],
+    process: ({ obj1, key }) => ({ type: 'unchanged', key, value: obj1[key] }),
+  },
 
-  if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
-    return { type: 'hasChildren', key, children: build(obj1[key], obj2[key]) };
-  }
-  return {
-    type: 'changed', key, beforeValue: obj1[key], afterValue: obj2[key],
-  };
-};
+  {
+    check: ({ obj1, obj2, key }) => _.isObject(obj1[key]) && _.isObject(obj2[key]),
+    process: ({
+      obj1, obj2, key, buildAst,
+    }) => ({
+      type: 'hasChildren', key, children: buildAst(obj1[key], obj2[key]),
+    }),
+  },
+
+  {
+    check: ({ obj1, obj2, key }) => obj1[key] !== obj2[key],
+    process: ({ obj1, obj2, key }) => ({
+      type: 'changed', key, beforeValue: obj1[key], afterValue: obj2[key],
+    }),
+  },
+
+];
+
+const findPropertyActions = data => propertyActions.find(({ check }) => check(data));
 
 const buildAst = (obj1, obj2) => {
   const uniqKeys = _.union(_.keys(obj1), _.keys(obj2));
-  const parseNode = (acc, key) => {
-    const node = getNode(obj1, obj2, key, buildAst);
-    return acc.concat(node);
+  const parseNode = (key) => {
+    const data = {
+      obj1, obj2, key, buildAst,
+    };
+    const { process } = findPropertyActions(data);
+    return process(data);
   };
-  return uniqKeys.reduce(parseNode, []);
+  return uniqKeys.map(parseNode);
 };
 
 export default buildAst;
